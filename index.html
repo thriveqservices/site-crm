@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThriveQ — Unlimited Users. One Price.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:#fff;color:#111;overflow-x:hidden;cursor:none}
+a,button{cursor:none}
+
+/* CURSOR */
+#cur{position:fixed;width:8px;height:8px;background:#111;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s}
+#cur-r{position:fixed;width:30px;height:30px;border:1.5px solid rgba(0,0,0,.18);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+
+/* PAGE SYSTEM */
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:800;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:#fff;border-bottom:1px solid #f0f0f0}
+.logo{font-size:1.1rem;font-weight:700;letter-spacing:-.03em;color:#111;text-decoration:none}
+.logo b{color:#6fc935}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{font-size:.83rem;font-weight:400;color:#666;text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:#111}
+.nav-r{display:flex;gap:.6rem}
+.nav-login{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:#555;padding:.4rem .9rem;border:1px solid #e5e5e5;border-radius:8px;background:#fff;transition:all .15s}
+.nav-login:hover{border-color:#111;color:#111}
+.nav-demo{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;color:#fff;background:#111;padding:.4rem 1.1rem;border-radius:8px;border:none;transition:background .15s}
+.nav-demo:hover{background:#6fc935;color:#000}
+
+/* =========== HOME =========== */
+/* HERO */
+.hero{min-height:100vh;padding:5.5rem 2rem 0;text-align:center;background:#fff;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(3rem,6.5vw,6rem);font-weight:500;line-height:1.04;letter-spacing:-.04em;color:#111;max-width:860px;margin:0 auto}
+.pill{display:inline-block;background:#c5f135;border-radius:14px;padding:.04em .3em;font-style:normal}
+.hero-sub{font-size:.98rem;font-weight:300;color:#666;max-width:460px;margin:1.3rem auto 0;line-height:1.78}
+.hero-btns{display:flex;gap:.7rem;justify-content:center;margin-top:1.8rem;flex-wrap:wrap}
+.btn-dark{font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;background:#111;color:#fff;padding:.75rem 1.8rem;border-radius:100px;border:none;transition:all .2s}
+.btn-dark:hover{background:#6fc935;color:#000}
+.btn-outline{font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;background:#fff;color:#555;padding:.75rem 1.8rem;border-radius:100px;border:1px solid #ddd;transition:all .2s}
+.btn-outline:hover{border-color:#111;color:#111}
+.hero-note{font-size:.71rem;color:#bbb;margin-top:.9rem}
+
+/* FLOATING CARDS */
+.cards-wrap{position:relative;margin-top:3.5rem;height:360px;display:flex;justify-content:center;align-items:flex-start}
+.fc{position:absolute;background:#fff;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.1),0 2px 6px rgba(0,0,0,.06);overflow:hidden}
+.fc-center{width:290px;top:0;left:50%;transform:translateX(-50%);background:#111;z-index:3;animation:flt 5s ease-in-out infinite}
+.fc-left{width:255px;top:36px;left:calc(50% - 320px);transform:rotate(-6deg);background:#f2f5ff;z-index:2;animation:flt 5.5s ease-in-out infinite}
+.fc-right{width:255px;top:36px;left:calc(50% + 65px);transform:rotate(5deg);background:#f0fff6;z-index:2;animation:flt 4.8s .3s ease-in-out infinite}
+@keyframes flt{0%,100%{margin-top:0}50%{margin-top:-9px}}
+
+/* center card */
+.cc-top{padding:.9rem 1rem;border-bottom:1px solid rgba(255,255,255,.09)}
+.cc-badge{display:inline-flex;align-items:center;gap:.35rem;background:rgba(111,201,53,.18);border:1px solid rgba(111,201,53,.25);border-radius:100px;padding:.2rem .65rem;font-size:.63rem;font-weight:600;color:#6fc935;letter-spacing:.05em}
+.cc-ttl{font-size:.98rem;font-weight:600;color:#fff;margin-top:.4rem;line-height:1.25}
+.cc-body{padding:.9rem 1rem;display:flex;flex-direction:column;gap:.55rem}
+.cc-u{background:rgba(255,255,255,.07);border-radius:8px;padding:.55rem .7rem;font-size:.72rem;color:rgba(255,255,255,.7);line-height:1.5}
+.cc-ai{background:rgba(111,201,53,.1);border:1px solid rgba(111,201,53,.2);border-radius:8px;padding:.55rem .7rem;font-size:.72rem;color:#fff;line-height:1.5}
+.cc-ai strong{color:#6fc935}
+.dots{display:flex;gap:3px;align-items:center;height:12px}
+.dots span{width:4px;height:4px;border-radius:50%;background:#6fc935;opacity:.5;animation:db 1.4s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes db{0%,80%,100%{opacity:.4;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+
+/* left card */
+.lc-head{padding:.8rem .9rem;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:.5rem;align-items:center}
+.lc-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#6fc935,#3a9010);display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff}
+.lc-name{font-size:.72rem;font-weight:600;color:#111}
+.lc-role{font-size:.6rem;color:#999}
+.lc-body{padding:.8rem .9rem}
+.lc-row{display:flex;gap:.5rem;margin-bottom:.65rem}
+.lc-stat{flex:1;background:#fff;border-radius:8px;padding:.65rem .5rem;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lc-val{font-size:1.05rem;font-weight:700;letter-spacing:-.03em;line-height:1}
+.lc-val.g{color:#16a34a}.lc-val.a{color:#d97706}
+.lc-lbl{font-size:.58rem;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-top:.15rem}
+.lc-bar{margin-bottom:.5rem}
+.lc-bl{display:flex;justify-content:space-between;font-size:.62rem;color:#bbb;margin-bottom:.25rem}
+.trk{height:4px;background:#eee;border-radius:2px;overflow:hidden}
+.fil{height:100%;border-radius:2px}
+.fil-g{background:#6fc935}.fil-a{background:#f59e0b}
+
+/* right card */
+.rc-head{padding:.75rem .9rem;border-bottom:1px solid rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center}
+.rc-ttl{font-size:.72rem;font-weight:600;color:#111}
+.rc-live{font-size:.62rem;font-weight:600;color:#16a34a;display:flex;align-items:center;gap:.28rem}
+.rc-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#16a34a}
+.rc-body{padding:.75rem .9rem;display:flex;flex-direction:column;gap:0}
+.rc-row{display:flex;justify-content:space-between;align-items:center;padding:.42rem 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.rc-row:last-child{border-bottom:none}
+.rc-co{font-size:.71rem;font-weight:600;color:#111}
+.rc-st{font-size:.6rem;color:#aaa;margin-top:.04rem}
+.rc-amt{font-size:.74rem;font-weight:700;color:#16a34a}
+
+/* LOGOS */
+.logos{background:#fafafa;border-top:1px solid #f0f0f0;border-bottom:1px solid #f0f0f0;padding:1.3rem 2.5rem;display:flex;align-items:center;gap:2.5rem;overflow:hidden}
+.logos-lbl{font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#ccc;white-space:nowrap;flex-shrink:0}
+.logos-items{display:flex;gap:2.8rem;flex-wrap:wrap}
+.logos-item{font-size:.83rem;font-weight:600;color:#ddd;transition:color .2s}
+.logos-item:hover{color:#999}
+
+/* SECTIONS */
+.sec{padding:5.5rem 2.5rem;max-width:1100px;margin:0 auto}
+.sec-dark{background:#111;color:#fff}
+.sec-dark .sec{max-width:1100px;margin:0 auto}
+.sec-gray{background:#fafafa}
+.sec-gray .sec{max-width:1100px;margin:0 auto}
+
+.eyebrow{font-size:.68rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#bbb;margin-bottom:.9rem}
+.eyebrow.g{color:#6fc935}
+.sh{font-size:clamp(1.9rem,3.8vw,3.4rem);font-weight:500;letter-spacing:-.04em;line-height:1.08;max-width:680px}
+.sh.w{color:#fff}
+.sp{font-size:.93rem;font-weight:300;line-height:1.78;color:#888;max-width:440px;margin-top:.8rem}
+.sp.w{color:rgba(255,255,255,.42)}
+
+/* WHY GRID */
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #f0f0f0;border-radius:18px;overflow:hidden;margin-top:3rem}
+.wc{padding:2rem 1.5rem;border-right:1px solid #f0f0f0;transition:background .2s}
+.wc:nth-child(4n){border-right:none}
+.wc:nth-child(n+5){border-top:1px solid #f0f0f0}
+.wc:hover{background:#fafafa}
+.wn{font-size:2rem;font-weight:800;color:rgba(0,0,0,.05);letter-spacing:-.06em;line-height:1;margin-bottom:1rem}
+.wi{font-size:1.2rem;margin-bottom:.65rem}
+.wc h3{font-size:.86rem;font-weight:600;color:#111;margin-bottom:.35rem}
+.wc p{font-size:.76rem;font-weight:300;line-height:1.65;color:#aaa}
+
+/* COST */
+.cost-box{background:#c5f135;border-radius:18px;padding:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;margin-top:2.5rem}
+.cost-ey{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(0,0,0,.4);margin-bottom:.5rem}
+.cost-num{font-size:clamp(2.5rem,5vw,4rem);font-weight:700;letter-spacing:-.06em;line-height:1;color:#111}
+.cost-desc{font-size:.82rem;color:rgba(0,0,0,.5);margin-top:.4rem;line-height:1.65;max-width:340px}
+.cost-tags{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.9rem}
+.ctag{background:rgba(0,0,0,.1);border-radius:100px;padding:.22rem .75rem;font-size:.67rem;font-weight:600;color:#111}
+.cost-q{font-size:1.05rem;font-weight:300;font-style:italic;line-height:1.65;color:rgba(0,0,0,.6)}
+.cost-attr{font-size:.72rem;font-weight:500;color:rgba(0,0,0,.4);margin-top:.7rem}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #f0f0f0;border-radius:16px;overflow:hidden;margin-top:1px}
+.sc{padding:1.7rem;text-align:center;border-right:1px solid #f0f0f0;background:#fff;transition:background .2s}
+.sc:last-child{border-right:none}
+.sc:hover{background:#fafafa}
+.sv{font-size:2.2rem;font-weight:700;letter-spacing:-.05em;color:#111}
+.sv .g{color:#6fc935}
+.sl{font-size:.67rem;font-weight:500;color:#bbb;margin-top:.3rem;text-transform:uppercase;letter-spacing:.07em}
+
+/* AI */
+.ai-layout{display:grid;grid-template-columns:1fr 1fr;gap:4.5rem;align-items:start}
+.ai-pts{display:flex;flex-direction:column;gap:1rem;margin-top:2.2rem}
+.ai-pt{display:flex;gap:.85rem;padding:1rem;border-radius:12px;border:1px solid rgba(255,255,255,.07);transition:all .2s}
+.ai-pt:hover{border-color:rgba(111,201,53,.4);background:rgba(111,201,53,.05)}
+.ai-n{width:24px;height:24px;border-radius:50%;border:1px solid rgba(111,201,53,.3);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#6fc935;flex-shrink:0}
+.ai-pt h4{font-size:.86rem;font-weight:600;color:#fff;margin-bottom:.18rem}
+.ai-pt p{font-size:.76rem;font-weight:300;line-height:1.6;color:rgba(255,255,255,.38)}
+
+/* chat */
+.chat{background:#1a1a1a;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden}
+.chat-bar{background:#222;padding:.72rem 1rem;display:flex;align-items:center;gap:.4rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.cd{width:8px;height:8px;border-radius:50%}
+.cd:nth-child(1){background:#ff5f57}.cd:nth-child(2){background:#febc2e}.cd:nth-child(3){background:#28c840}
+.chat-lbl{font-size:.68rem;color:rgba(255,255,255,.28);margin-left:.35rem}
+.chat-msgs{padding:1.2rem;display:flex;flex-direction:column;gap:.7rem}
+.cmsg{display:flex;gap:.5rem}
+.cav{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;margin-top:1px}
+.cav.u{background:rgba(255,255,255,.1);color:rgba(255,255,255,.55)}
+.cav.ai{background:#6fc935;color:#000}
+.cb{border-radius:9px;padding:.58rem .75rem;font-size:.75rem;line-height:1.55;max-width:90%}
+.cb.u{background:rgba(255,255,255,.06);color:rgba(255,255,255,.68)}
+.cb.ai{background:rgba(111,201,53,.1);border:1px solid rgba(111,201,53,.18);color:#fff}
+.cb.ai strong{color:#6fc935}
+.chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.42rem}
+.chip{background:rgba(255,255,255,.07);border-radius:6px;padding:.24rem .5rem;font-size:.67rem;color:rgba(255,255,255,.6)}
+.chip strong{color:#f59e0b}
+.chat-foot{border-top:1px solid rgba(255,255,255,.06);padding:.72rem 1rem;display:flex;gap:.5rem}
+.cin{flex:1;background:rgba(255,255,255,.05);border-radius:7px;padding:.44rem .75rem;font-size:.72rem;color:rgba(255,255,255,.25);font-family:'DM Sans',sans-serif}
+.csnd{width:26px;height:26px;border-radius:6px;background:#6fc935;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#000;font-weight:700}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-top:3rem}
+.fc2{background:#fff;border:1px solid #f0f0f0;border-radius:14px;padding:1.7rem;transition:all .2s}
+.fc2:hover{border-color:#c5f135;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.fc2.wide{grid-column:span 2}
+.ficon{font-size:1.4rem;margin-bottom:.75rem}
+.fc2 h3{font-size:.88rem;font-weight:600;color:#111;margin-bottom:.32rem}
+.fc2 p{font-size:.77rem;font-weight:300;line-height:1.65;color:#aaa}
+.ftag{display:inline-block;background:#c5f135;border-radius:6px;padding:.15rem .52rem;font-size:.63rem;font-weight:600;color:#111;margin-top:.55rem}
+
+/* COMPARE CARDS */
+.cmp-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-top:3rem}
+.cmp-card{background:#fff;border:1px solid #f0f0f0;border-radius:18px;padding:2rem;display:flex;align-items:center;justify-content:space-between;transition:all .25s}
+.cmp-card:hover{border-color:#111;box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-2px)}
+.cmp-left{display:flex;align-items:center;gap:1.1rem}
+.cmp-logo{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0}
+.cmp-meta h3{font-size:.92rem;font-weight:600;color:#111;margin-bottom:.22rem}
+.cmp-meta p{font-size:.76rem;color:#aaa;font-weight:300;line-height:1.5}
+.cmp-arr{font-size:1rem;color:#ccc;transition:all .2s}
+.cmp-card:hover .cmp-arr{color:#111;transform:translateX(3px)}
+
+/* WL */
+.wl-layout{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.wl-vis{position:relative;height:380px}
+.wl-sc{position:absolute;background:#fff;border:1px solid #f0f0f0;border-radius:14px;overflow:hidden;box-shadow:0 6px 32px rgba(0,0,0,.08)}
+.wl-sc.a{width:255px;height:310px;top:0;left:0;animation:flt 5s ease-in-out infinite}
+.wl-sc.b{width:220px;height:265px;bottom:0;right:0;animation:flt 4.5s .5s ease-in-out infinite;background:#f0fff4;border-color:#bbf7d0}
+.wl-top{padding:.62rem .88rem;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:.35rem}
+.wl-sc.b .wl-top{background:rgba(111,201,53,.06);border-color:#dcfce7}
+.wd{width:6px;height:6px;border-radius:50%;background:#ddd}
+.wb{font-size:.63rem;font-weight:700;color:#ccc;margin-left:.22rem;letter-spacing:.06em}
+.wl-sc.b .wb{color:#6fc935}
+.wl-body{padding:.8rem .88rem}
+.wl{height:5px;border-radius:2px;background:#eee;margin-bottom:.36rem}
+.wl-sc.b .wl{background:rgba(111,201,53,.18)}
+.wl.m{width:80%}.wl.s{width:55%}
+.wr{display:flex;gap:.38rem;margin-top:.52rem}
+.wb2{flex:1;height:36px;background:#f5f5f5;border-radius:6px}
+.wl-sc.b .wb2{background:rgba(111,201,53,.1)}
+.wg{background:rgba(111,201,53,.18)!important}
+.wl-pts{display:flex;flex-direction:column;gap:.85rem;margin-top:1.8rem}
+.wp{display:flex;gap:.72rem;padding-bottom:.85rem;border-bottom:1px solid #f0f0f0}
+.wp:last-child{border-bottom:none;padding-bottom:0}
+.wp-ck{width:18px;height:18px;border-radius:50%;background:#c5f135;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#111;flex-shrink:0;margin-top:1px}
+.wp h4{font-size:.84rem;font-weight:600;color:#111;margin-bottom:.15rem}
+.wp p{font-size:.76rem;font-weight:300;line-height:1.6;color:#aaa}
+
+/* DS */
+.ds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem}
+.ds-card{background:#fff;border:1px solid #f0f0f0;border-radius:14px;padding:1.8rem;transition:all .22s}
+.ds-card:hover{border-color:#c5f135;transform:translateY(-2px)}
+.ds-icon{font-size:1.6rem;margin-bottom:.85rem}
+.ds-card h3{font-size:.88rem;font-weight:600;color:#111;margin-bottom:.35rem}
+.ds-card p{font-size:.77rem;font-weight:300;line-height:1.65;color:#aaa}
+
+/* TESTIMONIALS */
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem}
+.tc{background:#1c1c1c;border-radius:14px;padding:1.7rem}
+.stars{color:#fbbf24;font-size:.7rem;margin-bottom:.72rem;letter-spacing:.05em}
+.tq{font-size:.86rem;font-weight:300;font-style:italic;line-height:1.7;color:rgba(255,255,255,.62);margin-bottom:1.3rem}
+.ta{display:flex;gap:.6rem;align-items:center}
+.tav{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6fc935,#3a9010);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff}
+.tn{font-size:.8rem;font-weight:600;color:#fff}
+.tr{font-size:.68rem;color:rgba(255,255,255,.28);margin-top:.06rem}
+
+/* CTA */
+.cta-sec{background:#c5f135;padding:7rem 2.5rem;text-align:center}
+.cta-sec h2{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:500;letter-spacing:-.05em;line-height:1;color:#111}
+.cta-sec p{font-size:.93rem;font-weight:300;color:rgba(0,0,0,.48);max-width:360px;margin:1.1rem auto 0;line-height:1.75}
+.cta-btns{display:flex;gap:.7rem;justify-content:center;margin-top:2.2rem;flex-wrap:wrap}
+.btn-blk{font-family:'DM Sans',sans-serif;background:#111;color:#fff;font-size:.88rem;font-weight:600;padding:.78rem 2rem;border-radius:100px;border:none;transition:all .2s}
+.btn-blk:hover{background:#000;transform:translateY(-1px)}
+.btn-od{font-family:'DM Sans',sans-serif;background:transparent;color:#111;font-size:.88rem;font-weight:500;padding:.78rem 1.8rem;border-radius:100px;border:1.5px solid rgba(0,0,0,.22);transition:all .2s}
+.btn-od:hover{border-color:#111}
+.cta-note{font-size:.69rem;color:rgba(0,0,0,.32);margin-top:1.1rem}
+
+/* FOOTER */
+footer{background:#111;padding:2.8rem 2.5rem 1.8rem}
+.ft{display:flex;justify-content:space-between;gap:2.5rem;flex-wrap:wrap;padding-bottom:2.2rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.ft-brand p{font-size:.76rem;color:rgba(255,255,255,.27);margin-top:.5rem;max-width:185px;line-height:1.6;font-weight:300}
+.ft-logo{font-size:1rem;font-weight:700;letter-spacing:-.03em;color:#fff}
+.ft-logo b{color:#6fc935}
+.ft-col h5{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:.85rem}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.ft-col a{font-size:.79rem;color:rgba(255,255,255,.33);text-decoration:none;transition:color .15s}
+.ft-col a:hover{color:rgba(255,255,255,.8)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;flex-wrap:wrap;gap:.7rem}
+.ft-copy{font-size:.7rem;color:rgba(255,255,255,.18)}
+.ft-badge{font-size:.67rem;color:rgba(255,255,255,.16);display:flex;align-items:center;gap:.3rem}
+.ft-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:#6fc935}
+
+/* =========== COMPARE PAGES =========== */
+.cmp-hero{padding:5.5rem 2.5rem 3rem;text-align:center;background:#fff;border-bottom:1px solid #f0f0f0}
+.cmp-hero h1{font-size:clamp(2rem,4vw,3.5rem);font-weight:500;letter-spacing:-.04em;line-height:1.08;color:#111}
+.cmp-hero p{font-size:.93rem;font-weight:300;color:#888;max-width:460px;margin:.85rem auto 0;line-height:1.75}
+.vs-row{display:flex;align-items:center;justify-content:center;gap:2rem;padding:2.5rem;background:#fafafa;border-bottom:1px solid #f0f0f0;flex-wrap:wrap}
+.vs-b{text-align:center}
+.vs-name{font-size:1.5rem;font-weight:700;letter-spacing:-.04em;color:#111}
+.vs-sub{font-size:.73rem;color:#bbb;margin-top:.18rem}
+.vs-vs{font-size:1rem;font-weight:700;color:#ccc;width:44px;height:44px;border:2px solid #eee;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* table */
+.tbl-wrap{overflow-x:auto;border-radius:16px;border:1px solid #f0f0f0}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:560px}
+thead{background:#111}
+th{padding:.9rem 1.1rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:left;color:rgba(255,255,255,.35)}
+th.tq{color:#6fc935;background:rgba(111,201,53,.1)}
+td{padding:.88rem 1.1rem;font-size:.82rem;border-bottom:1px solid #f7f7f5;color:#666;vertical-align:middle}
+td.fn{font-weight:600;color:#111}
+td.tq{background:rgba(111,201,53,.04);font-weight:600;color:#111}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafaf8}
+tr:hover td.tq{background:rgba(111,201,53,.07)}
+.ck{color:#15803d;font-weight:700}
+.cx{color:#dc2626;font-weight:700}
+.cp{color:#d97706;font-size:.77rem;font-weight:500}
+.hlr td{background:rgba(111,201,53,.04)!important}
+.hlr td.fn{color:#166534!important}
+.hlr td.tq{background:rgba(111,201,53,.09)!important}
+
+/* verdict */
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+.vcard{border-radius:16px;padding:2rem}
+.vcard.win{background:#c5f135}
+.vcard.lose{background:#fafafa;border:1px solid #f0f0f0}
+.vlbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.38);margin-bottom:.7rem}
+.vcard h3{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;color:#111;margin-bottom:.45rem}
+.vcard p{font-size:.8rem;font-weight:300;line-height:1.65;color:#444}
+.vcard.lose h3{color:#999}
+.vcard.lose p{color:#bbb}
+
+.tbl-note{font-size:.69rem;color:#bbb;margin-top:.7rem;font-style:italic}
+.back-btn{display:inline-flex;align-items:center;gap:.4rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:#666;padding:.42rem .9rem;border:1px solid #e5e5e5;border-radius:8px;background:#fff;transition:all .15s;margin-bottom:1.8rem}
+.back-btn:hover{border-color:#111;color:#111}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.sr.d1{transition-delay:.08s}.sr.d2{transition-delay:.16s}.sr.d3{transition-delay:.24s}
+.sr.vis{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none}
+  nav,footer,.logos,.cta-sec,.cmp-hero,.vs-row{padding-left:1.5rem;padding-right:1.5rem}
+  .hero{padding:5rem 1.5rem 0}
+  .fc-left,.fc-right{display:none}
+  .sec{padding:4.5rem 1.5rem}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .wc:nth-child(2n){border-right:none}
+  .wc:nth-child(n+3){border-top:1px solid #f0f0f0}
+  .cost-box{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .ai-layout{grid-template-columns:1fr;gap:2.5rem}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .fc2.wide{grid-column:span 1}
+  .cmp-cards{grid-template-columns:1fr}
+  .wl-layout{grid-template-columns:1fr}
+  .wl-vis{display:none}
+  .ds-grid{grid-template-columns:1fr}
+  .tst-grid{grid-template-columns:1fr}
+  .verdict{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<nav>
+  <a class="logo" href="#" onclick="show('home')">Thrive<b>Q</b></a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="show('home')">Home</a></li>
+    <li><a href="#" onclick="show('home');go('ai-sec')">AI Agent</a></li>
+    <li><a href="#" onclick="show('cmp-home')">Compare</a></li>
+    <li><a href="#" onclick="show('home');go('wl-sec')">White Label</a></li>
+    <li><a href="#" onclick="show('home');go('cta-sec')">Contact</a></li>
+  </ul>
+  <div class="nav-r">
+    <button class="nav-login">Log in</button>
+    <button class="nav-demo" onclick="show('home');go('cta-sec')">Get a Demo</button>
+  </div>
+</nav>
+
+<!-- ═══════ HOME ═══════ -->
+<div class="page active" id="page-home">
+
+<section class="hero">
+  <h1>Unlimited users,<br><span class="pill">one flat price.</span></h1>
+  <p class="hero-sub">ThriveQ is the CRM that doesn't charge per seat. AI agent built in. Deployed on your servers. White-label ready.</p>
+  <div class="hero-btns">
+    <button class="btn-dark" onclick="go('cta-sec')">Start Free Trial →</button>
+    <button class="btn-outline" onclick="show('cmp-home')">See Comparison</button>
+  </div>
+  <p class="hero-note">14-day free trial &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Free migration</p>
+
+  <div class="cards-wrap">
+    <!-- LEFT -->
+    <div class="fc fc-left">
+      <div class="lc-head"><div class="lc-av">RK</div><div><div class="lc-name">Rahul Kumar</div><div class="lc-role">Sales Manager · Mumbai</div></div></div>
+      <div class="lc-body">
+        <div class="lc-row">
+          <div class="lc-stat"><div class="lc-val g">₹62L</div><div class="lc-lbl">Pipeline</div></div>
+          <div class="lc-stat"><div class="lc-val a">84%</div><div class="lc-lbl">Quota</div></div>
+        </div>
+        <div class="lc-bar"><div class="lc-bl"><span>Deals Won</span><span>18/24</span></div><div class="trk"><div class="fil fil-g" style="width:75%"></div></div></div>
+        <div class="lc-bar"><div class="lc-bl"><span>Follow-ups</span><span>5 due</span></div><div class="trk"><div class="fil fil-a" style="width:40%"></div></div></div>
+      </div>
+    </div>
+    <!-- CENTER -->
+    <div class="fc fc-center">
+      <div class="cc-top"><div class="cc-badge">✦ AI Agent</div><div class="cc-ttl">Ask your CRM<br>anything.</div></div>
+      <div class="cc-body">
+        <div class="cc-u">Which deals are going cold this week?</div>
+        <div class="cc-ai"><strong>7 deals</strong> idle 10+ days — InnovateTech ₹18L, Medicore ₹11L, RapidBuild ₹8.5L on top.<br><br>Schedule follow-ups for all?</div>
+        <div class="cc-u">Yes — WhatsApp, all owners.</div>
+        <div class="cc-ai"><div class="dots"><span></span><span></span><span></span></div></div>
+      </div>
+    </div>
+    <!-- RIGHT -->
+    <div class="fc fc-right">
+      <div class="rc-head"><div class="rc-ttl">Live Deals</div><div class="rc-live">Live</div></div>
+      <div class="rc-body">
+        <div class="rc-row"><div><div class="rc-co">InnovateTech</div><div class="rc-st">Proposal Sent</div></div><div class="rc-amt">₹18L</div></div>
+        <div class="rc-row"><div><div class="rc-co">Medicore Pvt</div><div class="rc-st">Demo Done</div></div><div class="rc-amt">₹11L</div></div>
+        <div class="rc-row"><div><div class="rc-co">RapidBuild</div><div class="rc-st">Negotiation</div></div><div class="rc-amt">₹8.5L</div></div>
+        <div class="rc-row"><div><div class="rc-co">NexaTech</div><div class="rc-st">Qualified</div></div><div class="rc-amt">₹6L</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="logos sr">
+  <span class="logos-lbl">Trusted by</span>
+  <div class="logos-items">
+    <span class="logos-item">InnovateTech</span><span class="logos-item">GrowthStack</span><span class="logos-item">MedBridge</span><span class="logos-item">BuildRight</span><span class="logos-item">FinStack</span><span class="logos-item">Nexus Retail</span><span class="logos-item">Meridian Labs</span>
+  </div>
+</div>
+
+<!-- WHY -->
+<div id="why-sec"><div class="sec">
+  <div class="eyebrow g sr">Why ThriveQ</div>
+  <h2 class="sh sr d1">The CRM market charges you<br>to grow your team.</h2>
+  <p class="sp sr d2">Per-seat pricing, vendor lock-in, no data control. We fixed all three from the ground up.</p>
+  <div class="why-grid sr d2">
+    <div class="wc"><div class="wn">01</div><div class="wi">👥</div><h3>Unlimited Users</h3><p>Add your whole org. No seat counting, ever.</p></div>
+    <div class="wc"><div class="wn">02</div><div class="wi">🔒</div><h3>Your Server</h3><p>Deployed on your infra. Zero vendor data access.</p></div>
+    <div class="wc"><div class="wn">03</div><div class="wi">🤖</div><h3>AI Native</h3><p>Ask anything in plain English. Agent acts live.</p></div>
+    <div class="wc"><div class="wn">04</div><div class="wi">🎨</div><h3>White Label</h3><p>Sell ThriveQ as your own product, fully branded.</p></div>
+    <div class="wc"><div class="wn">05</div><div class="wi">⚙️</div><h3>Source Code</h3><p>You own the code. Customise without limits.</p></div>
+    <div class="wc"><div class="wn">06</div><div class="wi">📦</div><h3>Free Migration</h3><p>We move your data from any CRM, free.</p></div>
+    <div class="wc"><div class="wn">07</div><div class="wi">💬</div><h3>WhatsApp Native</h3><p>No add-on. Send, receive, log — built in.</p></div>
+    <div class="wc"><div class="wn">08</div><div class="wi">🇮🇳</div><h3>Built for India</h3><p>INR, GST invoicing, Indian workflows first.</p></div>
+  </div>
+  <div class="cost-box sr">
+    <div>
+      <div class="cost-ey">50 users on Zoho CRM Professional</div>
+      <div class="cost-num">₹8.4L / yr</div>
+      <div class="cost-desc">₹1,400 × 50 users × 12 months. ThriveQ is flat org-wide — all features, unlimited users, always.</div>
+      <div class="cost-tags"><span class="ctag">No per-seat fee</span><span class="ctag">Unlimited users</span><span class="ctag">All features</span></div>
+    </div>
+    <div>
+      <div class="cost-q">"We went from dreading the CRM invoice to never thinking about it."</div>
+      <div class="cost-attr">— Arjun Kapoor, VP Sales · FinStack Technologies</div>
+    </div>
+  </div>
+  <div class="stats sr">
+    <div class="sc"><div class="sv"><span class="g">∞</span></div><div class="sl">Users per plan</div></div>
+    <div class="sc"><div class="sv"><span class="g">0</span></div><div class="sl">Vendor data access</div></div>
+    <div class="sc"><div class="sv"><span class="g">100%</span></div><div class="sl">White-label capable</div></div>
+    <div class="sc"><div class="sv"><span class="g">14d</span></div><div class="sl">Free trial, no card</div></div>
+  </div>
+</div></div>
+
+<!-- AI -->
+<div class="sec-dark" id="ai-sec"><div class="sec">
+  <div class="ai-layout">
+    <div>
+      <div class="eyebrow g sr">AI Agent</div>
+      <h2 class="sh w sr d1">Your CRM<br>answers back.</h2>
+      <p class="sp w sr d2">Ask in plain English. It queries your live data and acts — no SQL, no dashboards.</p>
+      <div class="ai-pts sr d3">
+        <div class="ai-pt"><div class="ai-n">1</div><div><h4>Natural Language Queries</h4><p>Ask about any lead, deal, or number instantly.</p></div></div>
+        <div class="ai-pt"><div class="ai-n">2</div><div><h4>Predictive Lead Scoring</h4><p>AI ranks pipeline by real likelihood to close.</p></div></div>
+        <div class="ai-pt"><div class="ai-n">3</div><div><h4>One-Prompt Actions</h4><p>Schedule, assign, draft — agent executes in CRM.</p></div></div>
+        <div class="ai-pt"><div class="ai-n">4</div><div><h4>Auto Reports</h4><p>Forecasts and alerts, generated overnight.</p></div></div>
+      </div>
+    </div>
+    <div class="chat sr d2">
+      <div class="chat-bar"><div class="cd"></div><div class="cd"></div><div class="cd"></div><span class="chat-lbl">ThriveQ AI · Live CRM</span></div>
+      <div class="chat-msgs">
+        <div class="cmsg"><div class="cav u">U</div><div class="cb u">Which deals are going cold?</div></div>
+        <div class="cmsg"><div class="cav ai">✦</div><div class="cb ai"><strong>7 deals</strong> idle 10+ days.<div class="chips"><div class="chip">InnovateTech <strong>₹18L</strong></div><div class="chip">Medicore <strong>₹11L</strong></div><div class="chip">RapidBuild <strong>₹8.5L</strong></div></div></div></div>
+        <div class="cmsg"><div class="cav u">U</div><div class="cb u">Schedule WhatsApp follow-ups for all 7.</div></div>
+        <div class="cmsg"><div class="cav ai">✦</div><div class="cb ai"><strong>Done.</strong> 7 tasks created, owners notified, due 10 AM.</div></div>
+        <div class="cmsg"><div class="cav u">U</div><div class="cb u">Draft human-sounding messages for each.</div></div>
+        <div class="cmsg"><div class="cav ai">✦</div><div class="cb ai"><div class="dots"><span></span><span></span><span></span></div></div></div>
+      </div>
+      <div class="chat-foot"><div class="cin">Ask ThriveQ AI…</div><div class="csnd">→</div></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- FEATURES -->
+<div class="sec-gray"><div class="sec">
+  <div class="eyebrow sr">Features</div>
+  <h2 class="sh sr d1">Everything your team needs.</h2>
+  <div class="feat-grid sr d2">
+    <div class="fc2 wide"><div class="ficon">📋</div><h3>Unlimited Pipelines & Automations</h3><p>Drag-and-drop boards, unlimited stages and fields, unlimited automation rules. Zero code. Zero limits.</p><span class="ftag">No limits</span></div>
+    <div class="fc2"><div class="ficon">📧</div><h3>Email Automation</h3><p>Sequences, open tracking, and smart follow-ups.</p></div>
+    <div class="fc2"><div class="ficon">💬</div><h3>WhatsApp Native</h3><p>Send, receive, log — no add-on needed.</p><span class="ftag">India-first</span></div>
+    <div class="fc2"><div class="ficon">📊</div><h3>Analytics & Forecasting</h3><p>Real-time dashboards and AI revenue forecasting.</p></div>
+    <div class="fc2"><div class="ficon">🔗</div><h3>1000+ Integrations</h3><p>Slack, Razorpay, Shopify, Zapier, custom APIs.</p></div>
+    <div class="fc2"><div class="ficon">📝</div><h3>GST Invoicing</h3><p>GST-compliant quotes and invoices from deal view.</p><span class="ftag">India-first</span></div>
+    <div class="fc2"><div class="ficon">🎯</div><h3>Lead Management</h3><p>Capture, score, and route every lead.</p></div>
+    <div class="fc2"><div class="ficon">🛡️</div><h3>Role-Based Access</h3><p>Granular permissions across teams and territories.</p></div>
+  </div>
+</div></div>
+
+<!-- COMPARE ENTRY -->
+<div><div class="sec">
+  <div class="eyebrow sr">Compare</div>
+  <h2 class="sh sr d1">See how ThriveQ compares<br>to every major CRM.</h2>
+  <p class="sp sr d2">Accurate India pricing. Honest assessments. Pick a CRM.</p>
+  <div class="cmp-cards sr d2">
+    <div class="cmp-card" onclick="show('cmp-zoho')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8f4e8;color:#1a7a1a">Z</div><div class="cmp-meta"><h3>ThriveQ vs Zoho CRM</h3><p>India's most popular CRM — compared honestly.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-fw')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8efff;color:#1a3a8a">F</div><div class="cmp-meta"><h3>ThriveQ vs Freshworks</h3><p>Freshsales seat pricing vs ThriveQ flat rate.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-ms')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8efff;color:#0052cc">M</div><div class="cmp-meta"><h3>ThriveQ vs MS Dynamics</h3><p>₹5,500/user/mo reality check vs flat rate.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-lsq')"><div class="cmp-left"><div class="cmp-logo" style="background:#fff3e8;color:#b45309">L</div><div class="cmp-meta"><h3>ThriveQ vs LeadSquared</h3><p>India-built CRM — who wins on price and AI?</p></div></div><div class="cmp-arr">→</div></div>
+  </div>
+</div></div>
+
+<!-- WHITE LABEL -->
+<div class="sec-gray" id="wl-sec"><div class="sec">
+  <div class="wl-layout">
+    <div>
+      <div class="eyebrow g sr">White Label</div>
+      <h2 class="sh sr d1">Sell ThriveQ<br>as your own product.</h2>
+      <p class="sp sr d2">Your domain, your design, your pricing. We disappear completely.</p>
+      <div class="wl-pts sr d3">
+        <div class="wp"><div class="wp-ck">✓</div><div><h4>Your Brand, 100%</h4><p>Custom domain, logo, colours. ThriveQ invisible to clients.</p></div></div>
+        <div class="wp"><div class="wp-ck">✓</div><div><h4>Set Your Own Pricing</h4><p>Charge any price. Keep the full margin above wholesale.</p></div></div>
+        <div class="wp"><div class="wp-ck">✓</div><div><h4>Multi-Tenant Architecture</h4><p>Serve unlimited clients, full data isolation per client.</p></div></div>
+        <div class="wp"><div class="wp-ck">✓</div><div><h4>Full Source Code</h4><p>Build on ThriveQ. Extend and modify without limits.</p></div></div>
+      </div>
+      <button class="btn-dark" style="margin-top:1.6rem;border-radius:100px" onclick="go('cta-sec')">Become a Partner →</button>
+    </div>
+    <div class="wl-vis sr d2">
+      <div class="wl-sc a">
+        <div class="wl-top"><div class="wd"></div><div class="wd"></div><div class="wd"></div><span class="wb">ACME CRM</span></div>
+        <div class="wl-body"><div class="wl m"></div><div class="wl s"></div><div class="wr"><div class="wb2 wg"></div><div class="wb2"></div></div><div style="margin-top:.5rem"><div class="wl"></div><div class="wl m" style="margin-top:.32rem"></div></div><div class="wr" style="margin-top:.5rem"><div class="wb2"></div><div class="wb2 wg"></div><div class="wb2"></div></div></div>
+      </div>
+      <div class="wl-sc b">
+        <div class="wl-top"><div class="wd"></div><div class="wd"></div><div class="wd"></div><span class="wb">YourBrand CRM</span></div>
+        <div class="wl-body"><div class="wl m"></div><div class="wl s"></div><div class="wr"><div class="wb2"></div><div class="wb2"></div></div><div style="margin-top:.5rem"><div class="wl"></div><div class="wl s" style="margin-top:.32rem"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- DATA SOVEREIGNTY -->
+<div><div class="sec">
+  <div class="eyebrow g sr">Data Sovereignty</div>
+  <h2 class="sh sr d1">We can't see your data.<br>That's the architecture.</h2>
+  <p class="sp sr d2">Zero technical access — not by policy. Architecturally impossible.</p>
+  <div class="ds-grid sr d2">
+    <div class="ds-card"><div class="ds-icon">🏛️</div><h3>Your Infrastructure</h3><p>AWS, Azure, GCP, or on-premise. Data never leaves your perimeter.</p></div>
+    <div class="ds-card"><div class="ds-icon">🔐</div><h3>Zero-Knowledge Design</h3><p>Credentials and encryption keys never transit our systems.</p></div>
+    <div class="ds-card"><div class="ds-icon">📜</div><h3>Compliance Ready</h3><p>GDPR, India DPDP Act, SOC 2, ISO 27001. Audit trails built in.</p></div>
+  </div>
+</div></div>
+
+<!-- TESTIMONIALS -->
+<div class="sec-dark"><div class="sec">
+  <div class="eyebrow g sr">What teams say</div>
+  <h2 class="sh w sr d1">Real teams. Real savings.</h2>
+  <div class="tst-grid sr d2">
+    <div class="tc"><div class="stars">★★★★★</div><p class="tq">"60 users on Freshworks was brutal. Switching cut costs 80%+. The AI agent saves managers 2 hours daily on reporting."</p><div class="ta"><div class="tav">AK</div><div><div class="tn">Arjun Kapoor</div><div class="tr">VP Sales · FinStack, Mumbai</div></div></div></div>
+    <div class="tc"><div class="stars">★★★★★</div><p class="tq">"White labelling transformed our agency. We sell CRM as our own product now. Margins are exceptional."</p><div class="ta"><div class="tav">PS</div><div><div class="tn">Priya Sharma</div><div class="tr">Founder · GrowthStack, Bengaluru</div></div></div></div>
+    <div class="tc"><div class="stars">★★★★★</div><p class="tq">"Data privacy was our #1 blocker. ThriveQ on our own Azure — they literally cannot access our data. Legal approved in a day."</p><div class="ta"><div class="tav">RN</div><div><div class="tn">Rohan Nair</div><div class="tr">CTO · MedBridge, Delhi</div></div></div></div>
+  </div>
+</div></div>
+
+<!-- CTA -->
+<div id="cta-sec"><div class="cta-sec">
+  <h2 class="sr">Stop paying<br>the per-seat tax.</h2>
+  <p class="sr d1">14-day free trial. Unlimited users from day one. Free migration. No credit card.</p>
+  <div class="cta-btns sr d2"><button class="btn-blk">Start Free Trial →</button><button class="btn-od">Book a Live Demo</button></div>
+  <p class="cta-note sr d3">Free migration · No credit card · Unlimited users from day one</p>
+</div></div>
+
+<footer>
+  <div class="ft">
+    <div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div><p>Unlimited users. AI-native. Yours to own.</p></div>
+    <div class="ft-col"><h5>Product</h5><ul><li><a href="#">Features</a></li><li><a href="#">AI Agent</a></li><li><a href="#">Integrations</a></li><li><a href="#">Security</a></li></ul></div>
+    <div class="ft-col"><h5>Solutions</h5><ul><li><a href="#">Sales Teams</a></li><li><a href="#">Agencies</a></li><li><a href="#" onclick="show('home');go('wl-sec')">White Label</a></li><li><a href="#">Enterprise</a></li></ul></div>
+    <div class="ft-col"><h5>Compare</h5><ul><li><a href="#" onclick="show('cmp-zoho')">vs Zoho</a></li><li><a href="#" onclick="show('cmp-fw')">vs Freshworks</a></li><li><a href="#" onclick="show('cmp-ms')">vs MS Dynamics</a></li><li><a href="#" onclick="show('cmp-lsq')">vs LeadSquared</a></li></ul></div>
+    <div class="ft-col"><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ. All rights reserved.</span><span class="ft-badge">Deployed on your servers. Zero vendor access.</span></div>
+</footer>
+</div><!-- end home -->
+
+<!-- ═══════ COMPARE HOME ═══════ -->
+<div class="page" id="page-cmp-home">
+<div style="padding:5.5rem 2.5rem 3rem;max-width:1100px;margin:0 auto">
+  <button class="back-btn" onclick="show('home')">← Home</button>
+  <div class="eyebrow g">Compare</div>
+  <h1 style="font-size:clamp(2.5rem,5vw,4.2rem);font-weight:500;letter-spacing:-.05em;line-height:1.05;color:#111;margin-top:.4rem">ThriveQ vs <span class="pill">every CRM.</span></h1>
+  <p style="font-size:.93rem;font-weight:300;color:#888;max-width:440px;margin:1rem 0 3rem;line-height:1.75">Real India pricing. Honest comparisons. Pick a CRM to see the full breakdown.</p>
+  <div class="cmp-cards">
+    <div class="cmp-card" onclick="show('cmp-zoho')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8f4e8;color:#1a7a1a">Z</div><div class="cmp-meta"><h3>ThriveQ vs Zoho CRM</h3><p>India's most popular CRM — compared honestly on pricing, AI, and data control.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-fw')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8efff;color:#1a3a8a">F</div><div class="cmp-meta"><h3>ThriveQ vs Freshworks</h3><p>Freshsales seat-based pricing vs ThriveQ flat rate. Feature for feature.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-ms')"><div class="cmp-left"><div class="cmp-logo" style="background:#e8efff;color:#0052cc">M</div><div class="cmp-meta"><h3>ThriveQ vs MS Dynamics</h3><p>₹5,500/user/mo reality check. Enterprise CRM cost demystified.</p></div></div><div class="cmp-arr">→</div></div>
+    <div class="cmp-card" onclick="show('cmp-lsq')"><div class="cmp-left"><div class="cmp-logo" style="background:#fff3e8;color:#b45309">L</div><div class="cmp-meta"><h3>ThriveQ vs LeadSquared</h3><p>India-built CRM comparison. Pricing, AI, white-label, data control.</p></div></div><div class="cmp-arr">→</div></div>
+  </div>
+</div>
+<footer><div class="ft"><div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div></div></div><div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ.</span><button class="btn-dark" onclick="show('home')" style="border-radius:8px;font-size:.78rem;padding:.4rem 1rem">← Back to Home</button></div></footer>
+</div>
+
+<!-- ═══════ COMPARE: ZOHO ═══════ -->
+<div class="page" id="page-cmp-zoho">
+<div class="cmp-hero"><button class="back-btn" onclick="show('cmp-home')">← All Comparisons</button><h1>ThriveQ vs <span class="pill">Zoho CRM</span></h1><p>India's most popular CRM, compared honestly. Real pricing, no spin.</p></div>
+<div class="vs-row"><div class="vs-b"><div class="vs-name">ThriveQ</div><div class="vs-sub">Flat org-wide</div></div><div class="vs-vs">VS</div><div class="vs-b"><div class="vs-name" style="color:#aaa">Zoho CRM</div><div class="vs-sub">Per user / mo</div></div></div>
+<div style="padding:3.5rem 2.5rem;max-width:1100px;margin:0 auto">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:210px">Feature</th><th class="tq">ThriveQ ✦</th><th>Zoho CRM Professional</th></tr></thead>
+      <tbody>
+        <tr class="hlr"><td class="fn">Pricing model</td><td class="tq">Flat org-wide</td><td>₹1,400 / user / mo</td></tr>
+        <tr class="hlr"><td class="fn">50 users, 1 year</td><td class="tq" style="color:#166534;font-weight:700">Flat rate ✦</td><td>₹8.4L / yr</td></tr>
+        <tr><td class="fn">Unlimited users</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">AI Agent</td><td class="tq"><span class="ck">✓</span> Native, deep</td><td><span class="cp">~ Zia (basic)</span></td></tr>
+        <tr><td class="fn">White label</td><td class="tq"><span class="ck">✓</span> Full</td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Self-hosted</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Cloud only</td></tr>
+        <tr><td class="fn">Zero vendor data access</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Source code</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">WhatsApp native</td><td class="tq"><span class="ck">✓</span></td><td><span class="cp">~ Marketplace add-on</span></td></tr>
+        <tr><td class="fn">Free migration</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Paid</td></tr>
+        <tr><td class="fn">GST invoicing</td><td class="tq"><span class="ck">✓</span> Built-in</td><td><span class="cp">~ Add-on</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tbl-note">Zoho Professional ₹1,400/user/mo × 50 × 12 = ₹8.4L/yr. Standard starts at ₹800/user/mo. From Zoho India pricing, 2025.</p>
+  <div class="verdict">
+    <div class="vcard win"><div class="vlbl">Winner</div><h3>ThriveQ</h3><p>Flat pricing means 200 users pay the same as 5. Add native AI, self-hosting, white-label, and source code — Zoho doesn't compete on these dimensions.</p></div>
+    <div class="vcard lose"><div class="vlbl">Where Zoho wins</div><h3>Marketplace & ecosystem</h3><p>Zoho has a massive third-party app marketplace and strong brand trust in India. If integrations and ecosystem depth matter most, Zoho is a known quantity.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:3rem"><button class="btn-dark" style="border-radius:100px" onclick="show('home');go('cta-sec')">Switch from Zoho — Free Migration →</button></div>
+</div>
+<footer><div class="ft"><div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div></div></div><div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ.</span><button class="btn-dark" onclick="show('cmp-home')" style="border-radius:8px;font-size:.78rem;padding:.4rem 1rem">← All Comparisons</button></div></footer>
+</div>
+
+<!-- ═══════ COMPARE: FRESHWORKS ═══════ -->
+<div class="page" id="page-cmp-fw">
+<div class="cmp-hero"><button class="back-btn" onclick="show('cmp-home')">← All Comparisons</button><h1>ThriveQ vs <span class="pill">Freshworks</span></h1><p>Freshsales seat-based model vs ThriveQ flat rate. The full breakdown for Indian teams.</p></div>
+<div class="vs-row"><div class="vs-b"><div class="vs-name">ThriveQ</div><div class="vs-sub">Flat org-wide</div></div><div class="vs-vs">VS</div><div class="vs-b"><div class="vs-name" style="color:#aaa">Freshworks</div><div class="vs-sub">Per user / mo</div></div></div>
+<div style="padding:3.5rem 2.5rem;max-width:1100px;margin:0 auto">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:210px">Feature</th><th class="tq">ThriveQ ✦</th><th>Freshsales Pro</th></tr></thead>
+      <tbody>
+        <tr class="hlr"><td class="fn">Pricing model</td><td class="tq">Flat org-wide</td><td>~₹2,499 / user / mo</td></tr>
+        <tr class="hlr"><td class="fn">50 users, 1 year</td><td class="tq" style="color:#166534;font-weight:700">Flat rate ✦</td><td>~₹15L / yr</td></tr>
+        <tr><td class="fn">Unlimited users</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">AI Agent</td><td class="tq"><span class="ck">✓</span> Native</td><td><span class="cp">~ Freddy AI</span></td></tr>
+        <tr><td class="fn">White label</td><td class="tq"><span class="ck">✓</span> Full</td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Self-hosted</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Zero vendor data access</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Source code</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">WhatsApp native</td><td class="tq"><span class="ck">✓</span></td><td><span class="cp">~ Add-on</span></td></tr>
+        <tr><td class="fn">Free migration</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Paid</td></tr>
+        <tr><td class="fn">GST invoicing</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tbl-note">Freshsales Pro ~₹2,499/user/mo × 50 × 12 ≈ ₹15L/yr. From Freshworks India pricing, 2025.</p>
+  <div class="verdict">
+    <div class="vcard win"><div class="vlbl">Winner</div><h3>ThriveQ</h3><p>At ₹2,499/user/mo, 50 users cost ₹15L/yr on Freshworks. ThriveQ is flat, includes native AI, self-hosting, and white-label — none of which Freshworks offers.</p></div>
+    <div class="vcard lose"><div class="vlbl">Where Freshworks wins</div><h3>UI polish & support</h3><p>Freshworks has a refined out-of-box experience and solid 24/7 support. Good if onboarding speed and support SLAs matter more than cost and control.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:3rem"><button class="btn-dark" style="border-radius:100px" onclick="show('home');go('cta-sec')">Switch from Freshworks — Free Migration →</button></div>
+</div>
+<footer><div class="ft"><div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div></div></div><div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ.</span><button class="btn-dark" onclick="show('cmp-home')" style="border-radius:8px;font-size:.78rem;padding:.4rem 1rem">← All Comparisons</button></div></footer>
+</div>
+
+<!-- ═══════ COMPARE: MS DYNAMICS ═══════ -->
+<div class="page" id="page-cmp-ms">
+<div class="cmp-hero"><button class="back-btn" onclick="show('cmp-home')">← All Comparisons</button><h1>ThriveQ vs <span class="pill">MS Dynamics</span></h1><p>The enterprise CRM reality check. ₹5,500/user/month adds up fast.</p></div>
+<div class="vs-row"><div class="vs-b"><div class="vs-name">ThriveQ</div><div class="vs-sub">Flat org-wide</div></div><div class="vs-vs">VS</div><div class="vs-b"><div class="vs-name" style="color:#aaa">MS Dynamics</div><div class="vs-sub">~₹5,500 / user / mo</div></div></div>
+<div style="padding:3.5rem 2.5rem;max-width:1100px;margin:0 auto">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:210px">Feature</th><th class="tq">ThriveQ ✦</th><th>MS Dynamics 365 Sales</th></tr></thead>
+      <tbody>
+        <tr class="hlr"><td class="fn">Pricing model</td><td class="tq">Flat org-wide</td><td>~₹5,500 / user / mo</td></tr>
+        <tr class="hlr"><td class="fn">50 users, 1 year</td><td class="tq" style="color:#166534;font-weight:700">Flat rate ✦</td><td>~₹33L / yr</td></tr>
+        <tr><td class="fn">Unlimited users</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">AI Agent</td><td class="tq"><span class="ck">✓</span> Native</td><td><span class="cp">~ Copilot (extra $$)</span></td></tr>
+        <tr><td class="fn">White label</td><td class="tq"><span class="ck">✓</span> Full</td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Self-hosted</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Azure only</td></tr>
+        <tr><td class="fn">Zero vendor data access</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Source code</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Setup complexity</td><td class="tq">Low — we handle it</td><td>Very high — months</td></tr>
+        <tr><td class="fn">Free migration</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Costly impl. fees</td></tr>
+        <tr><td class="fn">WhatsApp native</td><td class="tq"><span class="ck">✓</span></td><td><span class="cp">~ Partner required</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tbl-note">MS Dynamics 365 Sales Pro ~₹5,500/user/mo × 50 × 12 = ₹33L/yr. From Microsoft India pricing, 2025.</p>
+  <div class="verdict">
+    <div class="vcard win"><div class="vlbl">Winner</div><h3>ThriveQ</h3><p>₹33L/yr vs flat rate. Dynamics also requires months of implementation and expensive Copilot add-ons for AI. ThriveQ ships in days with AI included.</p></div>
+    <div class="vcard lose"><div class="vlbl">Where Dynamics wins</div><h3>Microsoft ecosystem</h3><p>Deeply embedded in Office 365, Teams, and Azure. If your org is Microsoft-first and integration with that stack is non-negotiable, Dynamics makes sense.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:3rem"><button class="btn-dark" style="border-radius:100px" onclick="show('home');go('cta-sec')">Switch from Dynamics — Free Migration →</button></div>
+</div>
+<footer><div class="ft"><div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div></div></div><div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ.</span><button class="btn-dark" onclick="show('cmp-home')" style="border-radius:8px;font-size:.78rem;padding:.4rem 1rem">← All Comparisons</button></div></footer>
+</div>
+
+<!-- ═══════ COMPARE: LEADSQUARED ═══════ -->
+<div class="page" id="page-cmp-lsq">
+<div class="cmp-hero"><button class="back-btn" onclick="show('cmp-home')">← All Comparisons</button><h1>ThriveQ vs <span class="pill">LeadSquared</span></h1><p>Both India-built. Only one gives unlimited users, native AI, and full data sovereignty.</p></div>
+<div class="vs-row"><div class="vs-b"><div class="vs-name">ThriveQ</div><div class="vs-sub">Flat org-wide</div></div><div class="vs-vs">VS</div><div class="vs-b"><div class="vs-name" style="color:#aaa">LeadSquared</div><div class="vs-sub">Per user / mo</div></div></div>
+<div style="padding:3.5rem 2.5rem;max-width:1100px;margin:0 auto">
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:210px">Feature</th><th class="tq">ThriveQ ✦</th><th>LeadSquared</th></tr></thead>
+      <tbody>
+        <tr class="hlr"><td class="fn">Pricing model</td><td class="tq">Flat org-wide</td><td>~₹2,000+ / user / mo</td></tr>
+        <tr class="hlr"><td class="fn">50 users, 1 year</td><td class="tq" style="color:#166534;font-weight:700">Flat rate ✦</td><td>~₹12L+ / yr</td></tr>
+        <tr><td class="fn">Unlimited users</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">AI Agent</td><td class="tq"><span class="ck">✓</span> Native</td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">White label</td><td class="tq"><span class="ck">✓</span> Full</td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Self-hosted</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Zero vendor data access</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Source code</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">WhatsApp native</td><td class="tq"><span class="ck">✓</span></td><td><span class="ck">✓</span></td></tr>
+        <tr><td class="fn">GST invoicing</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span></td></tr>
+        <tr><td class="fn">Free migration</td><td class="tq"><span class="ck">✓</span></td><td><span class="cx">✗</span> Paid</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tbl-note">LeadSquared pricing varies. Sales CRM ~₹2,000+/user/mo estimate. 50 × 12 ≈ ₹12L+/yr. Approximate, 2025.</p>
+  <div class="verdict">
+    <div class="vcard win"><div class="vlbl">Winner</div><h3>ThriveQ</h3><p>LeadSquared is India-focused but still per-seat with no AI agent, no white-label, no self-hosting. ThriveQ wins on every enterprise-critical dimension.</p></div>
+    <div class="vcard lose"><div class="vlbl">Where LeadSquared wins</div><h3>Lead gen verticals</h3><p>Strong in education and financial services with purpose-built lead capture. If your primary use case is high-volume inbound lead management in these sectors, it's well-suited.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:3rem"><button class="btn-dark" style="border-radius:100px" onclick="show('home');go('cta-sec')">Switch from LeadSquared — Free Migration →</button></div>
+</div>
+<footer><div class="ft"><div class="ft-brand"><div class="ft-logo">Thrive<b>Q</b></div></div></div><div class="ft-bot"><span class="ft-copy">© 2025 ThriveQ.</span><button class="btn-dark" onclick="show('cmp-home')" style="border-radius:8px;font-size:.78rem;padding:.4rem 1rem">← All Comparisons</button></div></footer>
+</div>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),cr=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop)})();
+
+// Page switching
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById('page-'+id);
+  if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'instant'});observe()}
+}
+function go(id){
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})},80)
+}
+
+// Scroll reveal
+function observe(){
+  const els=document.querySelectorAll('.page.active .sr:not(.vis)');
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.07,rootMargin:'0px 0px -20px 0px'});
+  els.forEach(el=>io.observe(el));
+}
+observe();
+</script>
+</body>
+</html>
